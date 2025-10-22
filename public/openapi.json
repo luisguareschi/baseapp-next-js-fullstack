@@ -52,128 +52,7 @@
         ]
       }
     },
-    "responses": {
-      "400": {
-        "description": "Bad Request",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string",
-                  "example": "Invalid request parameters"
-                },
-                "code": {
-                  "type": "string",
-                  "example": "ERROR_400"
-                }
-              }
-            }
-          }
-        }
-      },
-      "401": {
-        "description": "Unauthorized",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string",
-                  "example": "Authentication required"
-                },
-                "code": {
-                  "type": "string",
-                  "example": "ERROR_401"
-                }
-              }
-            }
-          }
-        }
-      },
-      "403": {
-        "description": "Forbidden",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string",
-                  "example": "Access denied"
-                },
-                "code": {
-                  "type": "string",
-                  "example": "ERROR_403"
-                }
-              }
-            }
-          }
-        }
-      },
-      "404": {
-        "description": "Not Found",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string",
-                  "example": "Resource not found"
-                },
-                "code": {
-                  "type": "string",
-                  "example": "ERROR_404"
-                }
-              }
-            }
-          }
-        }
-      },
-      "409": {
-        "description": "Conflict",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string",
-                  "example": "Resource already exists"
-                },
-                "code": {
-                  "type": "string",
-                  "example": "ERROR_409"
-                }
-              }
-            }
-          }
-        }
-      },
-      "500": {
-        "description": "Internal Server Error",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string",
-                  "example": "An unexpected error occurred"
-                },
-                "code": {
-                  "type": "string",
-                  "example": "ERROR_500"
-                }
-              }
-            }
-          }
-        }
-      }
-    }
+    "responses": {}
   },
   "outputDir": "./public",
   "paths": {
@@ -196,18 +75,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "$ref": "#/components/responses/400"
-          },
-          "401": {
-            "$ref": "#/components/responses/401"
-          },
-          "403": {
-            "$ref": "#/components/responses/403"
-          },
-          "500": {
-            "$ref": "#/components/responses/500"
           }
         }
       }

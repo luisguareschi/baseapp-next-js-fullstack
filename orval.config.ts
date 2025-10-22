@@ -1,9 +1,16 @@
-const orvalConfig = {
+import { type Options } from "orval";
+
+interface OrvalConfig {
+  orval: Options;
+}
+
+const orvalConfig: OrvalConfig = {
   orval: {
     input: {
       target: "public/openapi.json",
     },
     output: {
+      baseUrl: "/api",
       target: "orval/generated/",
       mode: "tags-split",
       client: "react-query",

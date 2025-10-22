@@ -2,14 +2,14 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { signOut, useSession } from "@/lib/auth-client";
-import { useCurrentUser } from "@/queries/user/useCurrentUser";
+import { useGetMe } from "@/orval/generated/me/me";
 import { useRouter } from "next/navigation";
 
 const Home = () => {
   const { data: session } = useSession();
   const user = session?.user;
   const router = useRouter();
-  const { data: currentUser } = useCurrentUser();
+  const { data: currentUser } = useGetMe();
   return (
     <div className="flex flex-col items-center justify-center h-screen">
       <Card className="flex flex-col items-center justify-center p-5 w-fit gap-2">
