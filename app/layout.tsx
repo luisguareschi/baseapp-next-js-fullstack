@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Lato } from "next/font/google";
 import "./globals.css";
-import Providers from "@/app/providers";
+import ReactQueryProvider from "@/providers/react-query-provider";
 import { Toaster } from "react-hot-toast";
 
 const font = Lato({
@@ -20,10 +20,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={font.className}>
-        <Providers>
+        <ReactQueryProvider>
           {children}
           <Toaster />
-        </Providers>
+        </ReactQueryProvider>
       </body>
     </html>
   );
