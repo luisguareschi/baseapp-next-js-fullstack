@@ -1,10 +1,10 @@
 const orvalConfig = {
-  api: {
+  orval: {
     input: {
-      target: "http://localhost:8000/api/schema",
+      target: "public/openapi.json",
     },
     output: {
-      target: "api/",
+      target: "orval/generated/",
       mode: "tags-split",
       client: "react-query",
       prettier: true,
