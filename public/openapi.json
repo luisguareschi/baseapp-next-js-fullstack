@@ -32,12 +32,12 @@
               "email": {
                 "type": "string"
               },
-              "name": {
-                "type": "string"
-              },
-              "image": {
+              "username": {
                 "type": "string",
                 "nullable": true
+              },
+              "name": {
+                "type": "string"
               }
             },
             "required": [

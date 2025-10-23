@@ -10,9 +10,9 @@
 export type MeResponseUser = {
   id: string;
   email: string;
-  name: string;
   /** @nullable */
-  image?: string | null;
+  username?: string | null;
+  name: string;
 };
 
 export interface MeResponse {
