@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "BaseApp Next.js Fullstack Template",
+    "title": "OpenAPI",
     "version": "1.0.0",
-    "description": "This is the OpenAPI specification for your project."
+    "description": "BaseApp Next.js Fullstack Template"
   },
   "servers": [
     {
@@ -41,7 +41,6 @@
     "codes": {}
   },
   "apiDir": "./app/api",
-  "schemaDir": "./app",
   "schemaType": "zod",
   "docsUrl": "api-docs",
   "ui": "scalar",

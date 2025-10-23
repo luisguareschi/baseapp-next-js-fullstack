@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "BaseApp Next.js Fullstack Template",
+    "title": "OpenAPI",
     "version": "1.0.0",
-    "description": "This is the OpenAPI specification for your project."
+    "description": "BaseApp Next.js Fullstack Template"
   },
   "servers": [
     {
@@ -56,13 +56,13 @@
   },
   "outputDir": "./public",
   "paths": {
-    "/me": {
+    "/users/me": {
       "get": {
-        "operationId": "get-me",
+        "operationId": "get-users-me",
         "summary": "Get current user information",
         "description": "Fetches current user information",
         "tags": [
-          "Me"
+          "Users"
         ],
         "parameters": [],
         "responses": {
