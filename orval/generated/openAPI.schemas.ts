@@ -18,3 +18,20 @@ export type MeResponseUser = {
 export interface MeResponse {
   user: MeResponseUser;
 }
+
+export type GetUserResponseUser = {
+  id: string;
+  email: string;
+  /** @nullable */
+  username?: string | null;
+  name: string;
+};
+
+export interface GetUserResponse {
+  user: GetUserResponseUser;
+}
+
+export interface GetUserPathParams {
+  /** User ID */
+  id: string;
+}
