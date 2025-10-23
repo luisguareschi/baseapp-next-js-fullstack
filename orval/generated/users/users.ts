@@ -18,8 +18,121 @@ import type {
   UseQueryOptions,
   UseQueryResult,
 } from "@tanstack/react-query";
-import type { GetUserResponse, MeResponse } from "../openAPI.schemas";
+import type {
+  GetUserResponse,
+  GetUsersReponse,
+  MeResponse,
+} from "../openAPI.schemas";
 import { customAxios } from "../../../lib/axiosInstance";
+
+/**
+ * Fetches all users
+ * @summary Get all users
+ */
+export const getUsers = (signal?: AbortSignal) => {
+  return customAxios<GetUsersReponse>({
+    url: `/api/users`,
+    method: "GET",
+    signal,
+  });
+};
+
+export const getGetUsersQueryKey = () => {
+  return [`/api/users`] as const;
+};
+
+export const getGetUsersQueryOptions = <
+  TData = Awaited<ReturnType<typeof getUsers>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<Awaited<ReturnType<typeof getUsers>>, TError, TData>
+  >;
+}) => {
+  const { query: queryOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetUsersQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getUsers>>> = ({
+    signal,
+  }) => getUsers(signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getUsers>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData> };
+};
+
+export type GetUsersQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getUsers>>
+>;
+export type GetUsersQueryError = unknown;
+
+export function useGetUsers<
+  TData = Awaited<ReturnType<typeof getUsers>>,
+  TError = unknown,
+>(options: {
+  query: Partial<
+    UseQueryOptions<Awaited<ReturnType<typeof getUsers>>, TError, TData>
+  > &
+    Pick<
+      DefinedInitialDataOptions<
+        Awaited<ReturnType<typeof getUsers>>,
+        TError,
+        TData
+      >,
+      "initialData"
+    >;
+}): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData>;
+};
+export function useGetUsers<
+  TData = Awaited<ReturnType<typeof getUsers>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<Awaited<ReturnType<typeof getUsers>>, TError, TData>
+  > &
+    Pick<
+      UndefinedInitialDataOptions<
+        Awaited<ReturnType<typeof getUsers>>,
+        TError,
+        TData
+      >,
+      "initialData"
+    >;
+}): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> };
+export function useGetUsers<
+  TData = Awaited<ReturnType<typeof getUsers>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<Awaited<ReturnType<typeof getUsers>>, TError, TData>
+  >;
+}): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> };
+/**
+ * @summary Get all users
+ */
+
+export function useGetUsers<
+  TData = Awaited<ReturnType<typeof getUsers>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<Awaited<ReturnType<typeof getUsers>>, TError, TData>
+  >;
+}): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> } {
+  const queryOptions = getGetUsersQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
 
 /**
  * Fetches user information by ID

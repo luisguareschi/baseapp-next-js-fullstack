@@ -7,6 +7,16 @@
  * BaseApp Next.js Fullstack Template
  */
 
+export type GetUsersReponseItem = {
+  id: string;
+  email: string;
+  /** @nullable */
+  username?: string | null;
+  name: string;
+};
+
+export type GetUsersReponse = GetUsersReponseItem[];
+
 export type MeResponseUser = {
   id: string;
   email: string;

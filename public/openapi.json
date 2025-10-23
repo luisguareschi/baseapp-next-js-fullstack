@@ -93,12 +93,61 @@
         "required": [
           "user"
         ]
+      },
+      "GetUsersReponse": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string"
+            },
+            "username": {
+              "type": "string",
+              "nullable": true
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "email",
+            "name"
+          ]
+        }
       }
     },
     "responses": {}
   },
   "outputDir": "./public",
   "paths": {
+    "/users": {
+      "get": {
+        "operationId": "get-users",
+        "summary": "Get all users",
+        "description": "Fetches all users",
+        "tags": [
+          "Users"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUsersReponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/users/{id}": {
       "get": {
         "operationId": "get-users-{id}",
