@@ -40,3 +40,49 @@ jobs:
 
       - name: Lint
         run: yarn lint
+
+  prisma:
+    name: Check Prisma migrations
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: testuser
+          POSTGRES_PASSWORD: testpass
+          POSTGRES_DB: testdb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    
+    env: 
+      DATABASE_URL: "postgresql://testuser:testpass@localhost:5432/testdb"
+      BETTER_AUTH_SECRET: "test"
+      BETTER_AUTH_URL: "http://localhost:3000"
+      
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Validate Prisma Schema
+        run: npx prisma validate
+
+      - name: Apply Prisma Migrations
+        run: npx prisma migrate deploy
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
