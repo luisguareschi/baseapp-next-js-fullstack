@@ -1,7 +1,7 @@
 {
   "extends": ["next/core-web-vitals", "prettier", "plugin:prettier/recommended"],
+  "ignorePatterns": ["app/generated/**"],
   "rules": {
     "react-hooks/exhaustive-deps": "off"
   }
 }
-

@@ -1,12 +1,12 @@
 "use client";
-import useCurrentUser from "@/queries/auth/useCurrentUser";
 import { useRouter } from "next/navigation";
+import { useSession } from "@/lib/auth-client";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const { user, isFetching } = useCurrentUser();
+  const { data: session, isPending } = useSession();
 
-  if (!isFetching && !user) {
+  if (!isPending && !session) {
     router.replace("/login");
   }
 

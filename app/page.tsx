@@ -1,17 +1,17 @@
 "use client";
-import useCurrentUser from "@/queries/auth/useCurrentUser";
 import { useRouter } from "next/navigation";
 import FullScreenLoading from "@/components/common/full-screen-loading";
+import { useSession } from "@/lib/auth-client";
 
 export default function Main() {
   const router = useRouter();
-  const { user, isLoading } = useCurrentUser();
+  const { data: session, isPending } = useSession();
 
-  if (user) {
+  if (session) {
     router.replace("/home");
   }
 
-  if (!isLoading && !user) {
+  if (!isPending && !session) {
     router.replace("/login");
   }
 

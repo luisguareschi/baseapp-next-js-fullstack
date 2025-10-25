@@ -1,10 +1,17 @@
-const orvalConfig = {
-  api: {
+import { type Options } from "orval";
+
+interface OrvalConfig {
+  orval: Options;
+}
+
+const orvalConfig: OrvalConfig = {
+  orval: {
     input: {
-      target: "http://localhost:8000/api/schema",
+      target: "public/openapi.json",
     },
     output: {
-      target: "api/",
+      baseUrl: "/api",
+      target: "orval/generated/",
       mode: "tags-split",
       client: "react-query",
       prettier: true,

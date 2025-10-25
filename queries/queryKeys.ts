@@ -1,3 +1,3 @@
-export const QUERYKEYS = {
+export const QUERY_KEYS = {
   me: "me",
 };
