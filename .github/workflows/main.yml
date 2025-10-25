@@ -42,7 +42,7 @@ jobs:
         run: yarn lint
 
   prisma:
-    name: Check Prisma migrations
+    name: Prisma
     runs-on: ubuntu-latest
     
     services:
