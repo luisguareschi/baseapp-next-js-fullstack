@@ -16,11 +16,14 @@ export const GetUserResponse = z.object({
   }),
 });
 
-export const getUserService = async (req: NextRequest, { params }: any) => {
-  const { unauthorizedResponse } = await protectedSession(req);
+export const getUserService = async (
+  req: NextRequest,
+  { params }: any,
+): Promise<NextResponse> => {
+  const { session, unauthorizedResponse } = await protectedSession(req);
   const { id } = GetUserPathParams.parse(params);
 
-  if (unauthorizedResponse) {
+  if (!session) {
     return unauthorizedResponse;
   }
 

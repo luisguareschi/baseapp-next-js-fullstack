@@ -16,14 +16,10 @@ export const protectedSession = async (req: NextRequest) => {
   const session = await auth.api.getSession({
     headers: req.headers,
   });
-  let unauthorizedResponse: NextResponse | null = null;
-
-  if (!session) {
-    unauthorizedResponse = NextResponse.json(
-      { error: "Unauthorized" },
-      { status: 401 },
-    );
-  }
+  const unauthorizedResponse = NextResponse.json(
+    { error: "Unauthorized" },
+    { status: 401 },
+  );
 
   return {
     session,

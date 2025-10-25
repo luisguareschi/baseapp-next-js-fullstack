@@ -12,7 +12,9 @@ export const MeResponse = z.object({
   }),
 });
 
-export const getCurrentUserService = async (req: NextRequest) => {
+export const getCurrentUserService = async (
+  req: NextRequest,
+): Promise<NextResponse> => {
   const { session, unauthorizedResponse } = await protectedSession(req);
 
   if (!session) {

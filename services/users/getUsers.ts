@@ -12,10 +12,12 @@ export const GetUsersReponse = z.array(
   }),
 );
 
-export const getUsersService = async (req: NextRequest) => {
-  const { unauthorizedResponse } = await protectedSession(req);
+export const getUsersService = async (
+  req: NextRequest,
+): Promise<NextResponse> => {
+  const { session, unauthorizedResponse } = await protectedSession(req);
 
-  if (unauthorizedResponse) {
+  if (!session) {
     return unauthorizedResponse;
   }
 
