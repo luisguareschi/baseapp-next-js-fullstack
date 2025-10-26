@@ -16,9 +16,10 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { signIn } from "@/lib/auth-client";
+import { useSignIn } from "@/lib/auth-client";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { Spinner } from "../ui/spinner";
 
 const initialForm = {
   email: "",
@@ -31,24 +32,22 @@ export function LoginForm({
 }: React.ComponentProps<"div">) {
   const router = useRouter();
   const [form, setForm] = useState(initialForm);
+  const { mutate: signIn, isPending: isSigningIn } = useSignIn({
+    onSuccess: () => {
+      toast.success("Login successful");
+      router.push("/home");
+    },
+    onError: (error) => {
+      toast.error(error.error.message);
+    },
+  });
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await signIn.email(
-      {
-        email: form.email,
-        password: form.password,
-      },
-      {
-        onSuccess: () => {
-          toast.success("Login successful");
-          router.push("/home");
-        },
-        onError: (error) => {
-          toast.error(error.error.message);
-        },
-      },
-    );
+    signIn({
+      email: form.email,
+      password: form.password,
+    });
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -99,8 +98,11 @@ export function LoginForm({
                 />
               </Field>
               <Field>
-                <Button type="submit">Login</Button>
-                <Button variant="outline" type="button">
+                <Button type="submit" disabled={isSigningIn}>
+                  {isSigningIn && <Spinner />}
+                  Login
+                </Button>
+                <Button variant="outline" type="button" disabled={isSigningIn}>
                   Login with Google
                 </Button>
                 <FieldDescription className="text-center">

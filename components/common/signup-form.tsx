@@ -14,10 +14,11 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { signUp } from "@/lib/auth-client";
+import { useSignUp } from "@/lib/auth-client";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Spinner } from "../ui/spinner";
 
 const initialForm = {
   email: "",
@@ -29,24 +30,23 @@ const initialForm = {
 export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
   const router = useRouter();
   const [form, setForm] = useState(initialForm);
+  const { mutate: signUp, isPending: isSigningUp } = useSignUp({
+    onSuccess: () => {
+      toast.success("Account created successfully");
+      router.push("/login");
+    },
+    onError: (error) => {
+      toast.error(error.error.message);
+    },
+  });
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await signUp.email(
-      {
-        email: form.email,
-        name: form.name,
-        password: form.password,
-      },
-      {
-        onSuccess: () => {
-          toast.success("Account created successfully");
-          router.push("/login");
-        },
-        onError: (error) => {
-          toast.error(error.error.message);
-        },
-      },
-    );
+    signUp({
+      email: form.email,
+      name: form.name,
+      password: form.password,
+    });
   };
 
   const isFormValid = () => {
@@ -55,6 +55,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
     if (form.password.length < 1) return false;
     if (form.confirmPassword.length < 1) return false;
     if (form.password !== form.confirmPassword) return false;
+    if (isSigningUp) return false;
     return true;
   };
 
@@ -131,9 +132,10 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
             <FieldGroup>
               <Field>
                 <Button type="submit" disabled={!isFormValid()}>
+                  {isSigningUp && <Spinner />}
                   Create Account
                 </Button>
-                <Button variant="outline" type="button">
+                <Button variant="outline" type="button" disabled={isSigningUp}>
                   Sign up with Google
                 </Button>
                 <FieldDescription className="px-6 text-center">
