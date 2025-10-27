@@ -15,23 +15,32 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
 import { useSignIn } from "@/lib/auth-client";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { Spinner } from "../ui/spinner";
+import { useForm } from "react-hook-form";
+import z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-const initialForm = {
-  email: "",
-  password: "",
-};
+const formSchema = z.object({
+  email: z.email(),
+  password: z.string().min(1, "Password is required"),
+});
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
   const router = useRouter();
-  const [form, setForm] = useState(initialForm);
+  const { register, handleSubmit } = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
   const { mutate: signIn, isPending: isSigningIn } = useSignIn({
     onSuccess: () => {
       toast.success("Login successful");
@@ -42,16 +51,11 @@ export function LoginForm({
     },
   });
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const onSubmit = (data: z.infer<typeof formSchema>) => {
     signIn({
-      email: form.email,
-      password: form.password,
+      email: data.email,
+      password: data.password,
     });
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   return (
@@ -64,18 +68,15 @@ export function LoginForm({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="email">Email</FieldLabel>
                 <Input
-                  id="email"
                   type="email"
                   placeholder="m@example.com"
                   required
-                  name="email"
-                  value={form.email}
-                  onChange={handleInputChange}
+                  {...register("email")}
                 />
               </Field>
               <Field>
@@ -88,14 +89,7 @@ export function LoginForm({
                     Forgot your password?
                   </a>
                 </div>
-                <Input
-                  id="password"
-                  type="password"
-                  required
-                  name="password"
-                  value={form.password}
-                  onChange={handleInputChange}
-                />
+                <Input type="password" required {...register("password")} />
               </Field>
               <Field>
                 <Button type="submit" disabled={isSigningIn}>

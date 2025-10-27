@@ -10,6 +10,7 @@ import {
 import {
   Field,
   FieldDescription,
+  FieldError,
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
@@ -17,19 +18,31 @@ import { Input } from "@/components/ui/input";
 import { useSignUp } from "@/lib/auth-client";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { Spinner } from "../ui/spinner";
+import { useForm } from "react-hook-form";
+import z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-const initialForm = {
-  email: "",
-  name: "",
-  password: "",
-  confirmPassword: "",
-};
+const formSchema = z.object({
+  email: z.email().min(1, "Email is required"),
+  name: z.string().min(1, "Name is required"),
+  password: z.string().min(1, "Password is required"),
+});
 
 export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
   const router = useRouter();
-  const [form, setForm] = useState(initialForm);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      name: "",
+      password: "",
+    },
+  });
   const { mutate: signUp, isPending: isSigningUp } = useSignUp({
     onSuccess: () => {
       toast.success("Account created successfully");
@@ -40,27 +53,12 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
     },
   });
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const onSubmit = (data: z.infer<typeof formSchema>) => {
     signUp({
-      email: form.email,
-      name: form.name,
-      password: form.password,
+      email: data.email,
+      name: data.name,
+      password: data.password,
     });
-  };
-
-  const isFormValid = () => {
-    if (form.email.length < 1) return false;
-    if (form.name.length < 1) return false;
-    if (form.password.length < 1) return false;
-    if (form.confirmPassword.length < 1) return false;
-    if (form.password !== form.confirmPassword) return false;
-    if (isSigningUp) return false;
-    return true;
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   return (
@@ -72,31 +70,21 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <FieldGroup>
             <Field>
               <FieldLabel htmlFor="name">Full Name</FieldLabel>
-              <Input
-                id="name"
-                type="text"
-                placeholder="John Doe"
-                name="name"
-                required
-                value={form.name}
-                onChange={handleInputChange}
-              />
+              <Input type="text" placeholder="John Doe" {...register("name")} />
+              <FieldError>{errors.name?.message}</FieldError>
             </Field>
             <Field>
               <FieldLabel htmlFor="email">Email</FieldLabel>
               <Input
-                id="email"
                 type="email"
                 placeholder="m@example.com"
-                name="email"
-                required
-                onChange={handleInputChange}
-                value={form.email}
+                {...register("email")}
               />
+              <FieldError>{errors.email?.message}</FieldError>
               <FieldDescription>
                 We&apos;ll use this to contact you. We will not share your email
                 with anyone else.
@@ -104,34 +92,15 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
             </Field>
             <Field>
               <FieldLabel htmlFor="password">Password</FieldLabel>
-              <Input
-                id="password"
-                type="password"
-                name="password"
-                required
-                value={form.password}
-                onChange={handleInputChange}
-              />
+              <Input type="password" {...register("password")} />
+              <FieldError>{errors.password?.message}</FieldError>
               <FieldDescription>
                 Must be at least 8 characters long.
               </FieldDescription>
             </Field>
-            <Field>
-              <FieldLabel htmlFor="confirm-password">
-                Confirm Password
-              </FieldLabel>
-              <Input
-                name="confirmPassword"
-                type="password"
-                required
-                value={form.confirmPassword}
-                onChange={handleInputChange}
-              />
-              <FieldDescription>Please confirm your password.</FieldDescription>
-            </Field>
             <FieldGroup>
               <Field>
-                <Button type="submit" disabled={!isFormValid()}>
+                <Button type="submit" disabled={isSigningUp}>
                   {isSigningUp && <Spinner />}
                   Create Account
                 </Button>
